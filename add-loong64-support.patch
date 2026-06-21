@@ -1,22 +1,22 @@
 diff --git a/debian/Dockerfile b/debian/Dockerfile
-index 181848a..1fd68e6 100644
+index 181848a..c074416 100644
 --- a/debian/Dockerfile
 +++ b/debian/Dockerfile
 @@ -1,11 +1,13 @@
 +ARG DEBIAN_NAME=debian
  ARG TRIXIE_TAG=20251103
- 
+
  ARG DEBIAN_RELEASE_LINE=trixie
  ARG DEBIAN_VERSION=20260610
  ARG DEBIAN_VARIANT="-slim"
 -FROM debian:"${DEBIAN_RELEASE_LINE}-${DEBIAN_VERSION}${DEBIAN_VARIANT}" AS jre-and-war
 +FROM "${DEBIAN_NAME}:${DEBIAN_RELEASE_LINE}${DEBIAN_VARIANT}" AS jre-and-war
- 
+
  ARG JAVA_VERSION=21.0.11_10
 +ARG JDK_DOWNLOAD_URL
- 
+
  SHELL ["/bin/bash", "-o", "pipefail", "-c"]
- 
+
 @@ -19,10 +21,21 @@ RUN apt-get update \
      gnupg \
      jq \
@@ -32,9 +32,9 @@ index 181848a..1fd68e6 100644
 +     else \
 +       /usr/bin/jdk-download.sh; \
 +     fi
- 
+
  ENV PATH="/opt/jdk-${JAVA_VERSION}/bin:${PATH}"
- 
+
 +RUN java -version
 +
  # Generate smaller java runtime without unneeded files
@@ -43,10 +43,10 @@ index 181848a..1fd68e6 100644
 @@ -58,7 +71,7 @@ RUN curl -fsSL "${WAR_URL}" -o /war/jenkins.war \
    && gpg --import /war/jenkins-key.pub \
    && gpg --verify --trust-model direct /war/jenkins.war.asc /war/jenkins.war
- 
+
 -FROM debian:"${DEBIAN_RELEASE_LINE}-${DEBIAN_VERSION}${DEBIAN_VARIANT}" AS controller
 +FROM "${DEBIAN_NAME}:${DEBIAN_RELEASE_LINE}${DEBIAN_VARIANT}" AS controller
- 
+
  RUN apt-get update \
    && apt-get install -y --no-install-recommends \
 @@ -78,7 +91,7 @@ RUN apt-get update \
@@ -58,3 +58,20 @@ index 181848a..1fd68e6 100644
    && curl -L -s -o git-lfs.tgz "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/git-lfs-linux-${arch}-v${GIT_LFS_VERSION}.tar.gz" \
    && tar xzf git-lfs.tgz \
    && bash git-lfs-*/install.sh \
+@@ -158,11 +171,12 @@ ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
+
+ # metadata labels
+ LABEL \
+-    org.opencontainers.image.vendor="Jenkins project" \
+-    org.opencontainers.image.title="Official Jenkins Docker image" \
++    maintainer="徐晓伟 <xuxiaowei.com.cn>" \
++    org.opencontainers.image.vendor="Jenkins project for LoongArch64 (loong64)" \
++    org.opencontainers.image.title="Jenkins Docker image for LoongArch64 (loong64)" \
+     org.opencontainers.image.description="The Jenkins Continuous Integration and Delivery server" \
+     org.opencontainers.image.version="${JENKINS_VERSION}" \
+-    org.opencontainers.image.url="https://www.jenkins.io/" \
+-    org.opencontainers.image.source="https://github.com/jenkinsci/docker" \
++    org.opencontainers.image.url="https://xuxiaowei.io/t/828" \
++    org.opencontainers.image.source="https://github.com/kubernetes-loong64/jenkins-loong64" \
+     org.opencontainers.image.revision="${COMMIT_SHA}" \
+     org.opencontainers.image.licenses="MIT"

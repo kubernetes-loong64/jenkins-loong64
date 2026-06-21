@@ -1,0 +1,60 @@
+diff --git a/debian/Dockerfile b/debian/Dockerfile
+index 181848a..1fd68e6 100644
+--- a/debian/Dockerfile
++++ b/debian/Dockerfile
+@@ -1,11 +1,13 @@
++ARG DEBIAN_NAME=debian
+ ARG TRIXIE_TAG=20251103
+ 
+ ARG DEBIAN_RELEASE_LINE=trixie
+ ARG DEBIAN_VERSION=20260610
+ ARG DEBIAN_VARIANT="-slim"
+-FROM debian:"${DEBIAN_RELEASE_LINE}-${DEBIAN_VERSION}${DEBIAN_VARIANT}" AS jre-and-war
++FROM "${DEBIAN_NAME}:${DEBIAN_RELEASE_LINE}${DEBIAN_VARIANT}" AS jre-and-war
+ 
+ ARG JAVA_VERSION=21.0.11_10
++ARG JDK_DOWNLOAD_URL
+ 
+ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ 
+@@ -19,10 +21,21 @@ RUN apt-get update \
+     gnupg \
+     jq \
+   && rm -rf /var/lib/apt/lists/* \
+-  && /usr/bin/jdk-download.sh
++  && if [ -n "${JDK_DOWNLOAD_URL}" ]; then \
++       echo "==> Downloading JDK from ${JDK_DOWNLOAD_URL}"; \
++       curl -fsSL "${JDK_DOWNLOAD_URL}" -o /tmp/jdk.tar.gz; \
++       tar -xzf /tmp/jdk.tar.gz -C /opt/; \
++       EXTRACTED_DIR="$(tar -tzf /tmp/jdk.tar.gz | head -n 1 | cut -f1 -d"/")"; \
++       mv "/opt/${EXTRACTED_DIR}" "/opt/jdk-${JAVA_VERSION}"; \
++       rm -f /tmp/jdk.tar.gz; \
++     else \
++       /usr/bin/jdk-download.sh; \
++     fi
+ 
+ ENV PATH="/opt/jdk-${JAVA_VERSION}/bin:${PATH}"
+ 
++RUN java -version
++
+ # Generate smaller java runtime without unneeded files
+ # for now we include the full module path to maintain compatibility
+ # while still saving space (approx 200mb from the full distribution)
+@@ -58,7 +71,7 @@ RUN curl -fsSL "${WAR_URL}" -o /war/jenkins.war \
+   && gpg --import /war/jenkins-key.pub \
+   && gpg --verify --trust-model direct /war/jenkins.war.asc /war/jenkins.war
+ 
+-FROM debian:"${DEBIAN_RELEASE_LINE}-${DEBIAN_VERSION}${DEBIAN_VARIANT}" AS controller
++FROM "${DEBIAN_NAME}:${DEBIAN_RELEASE_LINE}${DEBIAN_VARIANT}" AS controller
+ 
+ RUN apt-get update \
+   && apt-get install -y --no-install-recommends \
+@@ -78,7 +91,7 @@ RUN apt-get update \
+ # Download and unpack the tar.gz distribution
+ ARG GIT_LFS_VERSION=3.7.1
+ # hadolint ignore=DL4006
+-RUN arch=$(uname -m | sed -e 's/x86_64/amd64/g' -e 's/aarch64/arm64/g') \
++RUN arch=$(uname -m | sed -e 's/x86_64/amd64/g' -e 's/aarch64/arm64/g' -e 's/loongarch64/loong64/g') \
+   && curl -L -s -o git-lfs.tgz "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/git-lfs-linux-${arch}-v${GIT_LFS_VERSION}.tar.gz" \
+   && tar xzf git-lfs.tgz \
+   && bash git-lfs-*/install.sh \

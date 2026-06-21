@@ -1,0 +1,94 @@
+name: loong64
+on:
+  push:
+    branches:
+      - loong64-*
+    tags:
+      - release-loong64-*
+  pull_request:
+    branches:
+      - loong64-*
+
+env:
+  KUBE_BASE_IMAGE_REGISTRY: ${{ vars.KUBE_BASE_IMAGE_REGISTRY || 'kubernetesloong64' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        DEBIAN_VARIANT: [ '', '-slim' ]
+        jdk:
+          - VERSION: 25
+            JAVA_VERSION: 25.0.3_9
+            LOONGSON_JAVA_VERSION: 25.4.28
+    env:
+      DEBIAN_NAME: lcr.loongnix.cn/debian
+      DEBIAN_RELEASE_LINE: forky
+      JDK_DOWNLOAD_URL: https://ftp.loongnix.cn/Java/openjdk${{ matrix.jdk.VERSION }}/loongson${{ matrix.jdk.LOONGSON_JAVA_VERSION }}-fx-jdk${{ matrix.jdk.JAVA_VERSION }}-linux-loongarch64-glibc2.34.tar.gz
+      DOCKER_IMAGE: "${{ vars.KUBE_BASE_IMAGE_REGISTRY || 'kubernetesloong64' }}/jenkins-loong64"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Print branch name
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "${{ github.base_ref }} (PR target)"
+          else
+            echo ${{ github.ref_name }}
+          fi
+      - name: Extract Jenkins branch
+        id: extract
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            REF=${{ github.base_ref }}
+          else
+            REF=${{ github.ref_name }}
+          fi
+          echo "REF=$REF"
+          RAW_VERSION=$(echo $REF | awk -F'loong64-' '{print $2}')
+          echo "RAW_VERSION=$RAW_VERSION"
+          echo "RAW_VERSION=$RAW_VERSION" >> ${GITHUB_OUTPUT}
+          JENKINS_BRANCH=$(echo $RAW_VERSION | awk -F'+' '{print $1}')
+          echo "JENKINS_BRANCH=$JENKINS_BRANCH"
+          echo "JENKINS_BRANCH=$JENKINS_BRANCH" >> ${GITHUB_ENV}
+          echo "JENKINS_BRANCH=$JENKINS_BRANCH" >> ${GITHUB_OUTPUT}
+      - name: Clone Jenkins
+        run: |
+          git clone --branch ${{ env.JENKINS_BRANCH }} --depth 1 https://github.com/jenkinsci/docker.git jenkinsci-docker
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3 # v4.1.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
+      - name: Login to Docker
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
+        if: github.event_name == 'push'
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Apply patches
+        working-directory: jenkinsci-docker
+        run: git apply ../add-loong64-support.patch
+      - name: Build image
+        working-directory: jenkinsci-docker
+        run: |
+          is_push=${{ github.event_name == 'push' && '--push' || '--load' }}
+          docker buildx build \
+            --no-cache \
+            -f debian/Dockerfile \
+            $is_push \
+            --platform linux/loong64 \
+            --build-arg "DEBIAN_NAME=${{ env.DEBIAN_NAME }}" \
+            --build-arg "DEBIAN_RELEASE_LINE=${{ env.DEBIAN_RELEASE_LINE }}" \
+            --build-arg "DEBIAN_VARIANT=${{ matrix.DEBIAN_VARIANT }}" \
+            --build-arg "JAVA_VERSION=${{ matrix.jdk.JAVA_VERSION }}" \
+            --build-arg "JDK_DOWNLOAD_URL=${{ env.JDK_DOWNLOAD_URL }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}-${{ matrix.jdk.VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}${{ matrix.DEBIAN_VARIANT }}-${{ matrix.jdk.VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}-${{ matrix.jdk.JAVA_VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}${{ matrix.DEBIAN_VARIANT }}-${{ matrix.jdk.JAVA_VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}-${{ matrix.jdk.LOONGSON_JAVA_VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}${{ matrix.DEBIAN_VARIANT }}-${{ matrix.jdk.LOONGSON_JAVA_VERSION }}" \
+            .

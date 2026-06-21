@@ -88,10 +88,10 @@ jobs:
             --build-arg "DEBIAN_VARIANT=${{ matrix.DEBIAN_VARIANT }}" \
             --build-arg "JAVA_VERSION=${{ matrix.jdk.JAVA_VERSION }}" \
             --build-arg "JDK_DOWNLOAD_URL=${{ env.JDK_DOWNLOAD_URL }}" \
-            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}-${{ matrix.jdk.VERSION }}" \
-            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}${{ matrix.DEBIAN_VARIANT }}-${{ matrix.jdk.VERSION }}" \
-            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}-${{ matrix.jdk.JAVA_VERSION }}" \
-            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}${{ matrix.DEBIAN_VARIANT }}-${{ matrix.jdk.JAVA_VERSION }}" \
-            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}-${{ matrix.jdk.LOONGSON_JAVA_VERSION }}" \
-            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}${{ matrix.DEBIAN_VARIANT }}-${{ matrix.jdk.LOONGSON_JAVA_VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}-jdk${{ matrix.jdk.VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}${{ matrix.DEBIAN_VARIANT }}-jdk${{ matrix.jdk.VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}-jdk${{ matrix.jdk.JAVA_VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}${{ matrix.DEBIAN_VARIANT }}-jdk${{ matrix.jdk.JAVA_VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}-jdk${{ matrix.jdk.LOONGSON_JAVA_VERSION }}" \
+            -t "${{ env.DOCKER_IMAGE }}:${{ env.JENKINS_BRANCH }}${{ matrix.DEBIAN_VARIANT }}-jdk${{ matrix.jdk.LOONGSON_JAVA_VERSION }}" \
             .

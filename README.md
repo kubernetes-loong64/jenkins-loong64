@@ -12,8 +12,8 @@ Images are published to Docker Hub under [`kubernetesloong64/jenkins-loong64`](h
 
 - [![kubernetesloong64/jenkins-loong64:2.575-jdk21](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.575-jdk21?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
 - [![kubernetesloong64/jenkins-loong64:2.575-jdk25](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.575-jdk25?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
-- [![kubernetesloong64/jenkins-loong64:2.568.1-jdk21](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.568.1-jdk21?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
-- [![kubernetesloong64/jenkins-loong64:2.568.1-jdk25](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.568.1-jdk25?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
+- [![kubernetesloong64/jenkins-loong64:2.568.2-jdk21](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.568.2-jdk21?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
+- [![kubernetesloong64/jenkins-loong64:2.568.2-jdk25](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.568.2-jdk25?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
 
 ### Pull Images
 
@@ -23,8 +23,8 @@ docker pull kubernetesloong64/jenkins-loong64:2.575-jdk21
 docker pull kubernetesloong64/jenkins-loong64:2.575-jdk25
 
 # Jenkins LTS (debian 14)
-docker pull kubernetesloong64/jenkins-loong64:2.568.1-jdk21
-docker pull kubernetesloong64/jenkins-loong64:2.568.1-jdk25
+docker pull kubernetesloong64/jenkins-loong64:2.568.2-jdk21
+docker pull kubernetesloong64/jenkins-loong64:2.568.2-jdk25
 ```
 
 ### Usage
@@ -40,7 +40,7 @@ docker run -d --name jenkins \
 docker run -d --name jenkins \
   -p 8080:8080 -p 50000:50000 \
   -v jenkins_home:/var/jenkins_home \
-  kubernetesloong64/jenkins-loong64:2.568.1-jdk21
+  kubernetesloong64/jenkins-loong64:2.568.2-jdk21
 ```
 
 After starting, get the initial admin password:

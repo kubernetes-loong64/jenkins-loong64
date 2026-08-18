@@ -51,7 +51,7 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
 ## Branch Naming
 
-Push a branch named `loong64-<jenkins-version>` (e.g. `loong64-2.577`) to trigger a build.
+Push a branch named `loong64-<jenkins-version>` (e.g. `loong64-2.578`) to trigger a build.
 
 ## License
 

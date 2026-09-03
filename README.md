@@ -10,21 +10,21 @@ Prebuilt [Jenkins](https://www.jenkins.io/) Docker images for the **LoongArch64 
 
 Images are published to Docker Hub under [`kubernetesloong64/jenkins-loong64`](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64).
 
-- [![kubernetesloong64/jenkins-loong64:2.577-jdk21](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.577-jdk21?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
-- [![kubernetesloong64/jenkins-loong64:2.577-jdk25](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.577-jdk25?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
-- [![kubernetesloong64/jenkins-loong64:2.568.2-jdk21](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.568.2-jdk21?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
-- [![kubernetesloong64/jenkins-loong64:2.568.2-jdk25](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.568.2-jdk25?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
+- [![kubernetesloong64/jenkins-loong64:2.580-jdk21](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.580-jdk21?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
+- [![kubernetesloong64/jenkins-loong64:2.580-jdk25](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.580-jdk25?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
+- [![kubernetesloong64/jenkins-loong64:2.568.3-jdk21](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.568.3-jdk21?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
+- [![kubernetesloong64/jenkins-loong64:2.568.3-jdk25](https://img.shields.io/docker/v/kubernetesloong64/jenkins-loong64/2.568.3-jdk25?arch=loong64&logo=docker&label=kubernetesloong64%2Fjenkins-loong64)](https://hub.docker.com/r/kubernetesloong64/jenkins-loong64/tags)
 
 ### Pull Images
 
 ```shell
 # Jenkins (debian 14)
-docker pull kubernetesloong64/jenkins-loong64:2.577-jdk21
-docker pull kubernetesloong64/jenkins-loong64:2.577-jdk25
+docker pull kubernetesloong64/jenkins-loong64:2.580-jdk21
+docker pull kubernetesloong64/jenkins-loong64:2.580-jdk25
 
 # Jenkins LTS (debian 14)
-docker pull kubernetesloong64/jenkins-loong64:2.568.2-jdk21
-docker pull kubernetesloong64/jenkins-loong64:2.568.2-jdk25
+docker pull kubernetesloong64/jenkins-loong64:2.568.3-jdk21
+docker pull kubernetesloong64/jenkins-loong64:2.568.3-jdk25
 ```
 
 ### Usage
@@ -34,13 +34,13 @@ docker pull kubernetesloong64/jenkins-loong64:2.568.2-jdk25
 docker run -d --name jenkins \
   -p 8080:8080 -p 50000:50000 \
   -v jenkins_home:/var/jenkins_home \
-  kubernetesloong64/jenkins-loong64:2.577-jdk21
+  kubernetesloong64/jenkins-loong64:2.580-jdk21
 
 # Run Jenkins LTS
 docker run -d --name jenkins \
   -p 8080:8080 -p 50000:50000 \
   -v jenkins_home:/var/jenkins_home \
-  kubernetesloong64/jenkins-loong64:2.568.2-jdk21
+  kubernetesloong64/jenkins-loong64:2.568.3-jdk21
 ```
 
 After starting, get the initial admin password:
@@ -51,7 +51,7 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
 ## Branch Naming
 
-Push a branch named `loong64-<jenkins-version>` (e.g. `loong64-2.579`) to trigger a build.
+Push a branch named `loong64-<jenkins-version>` (e.g. `loong64-2.580`) to trigger a build.
 
 ## License
 

@@ -1,5 +1,5 @@
 diff --git a/debian/Dockerfile b/debian/Dockerfile
-index 87295fd..06484aa 100644
+index c538c82..7cd6848 100644
 --- a/debian/Dockerfile
 +++ b/debian/Dockerfile
 @@ -1,11 +1,13 @@
@@ -7,12 +7,12 @@ index 87295fd..06484aa 100644
  ARG TRIXIE_TAG=20251103
  
  ARG DEBIAN_RELEASE_LINE=trixie
- ARG DEBIAN_VERSION=20260803
+ ARG DEBIAN_VERSION=20260824
  ARG DEBIAN_VARIANT="-slim"
 -FROM debian:"${DEBIAN_RELEASE_LINE}-${DEBIAN_VERSION}${DEBIAN_VARIANT}" AS jre-and-war
 +FROM "${DEBIAN_NAME}:${DEBIAN_RELEASE_LINE}${DEBIAN_VARIANT}" AS jre-and-war
  
- ARG JAVA_VERSION=21.0.12_8
+ ARG JAVA_VERSION=21.0.12.1_1
 +ARG JDK_DOWNLOAD_URL
  
  SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -49,16 +49,15 @@ index 87295fd..06484aa 100644
  
  RUN apt-get update \
    && apt-get install -y --no-install-recommends \
-@@ -68,7 +81,7 @@ RUN apt-get update \
+@@ -68,7 +81,6 @@ RUN apt-get update \
      libfontconfig1 \
      libfreetype6 \
      procps \
 -    ssh-client \
-+    openssh-client \
      tini \
      unzip \
      tzdata \
-@@ -78,7 +91,7 @@ RUN apt-get update \
+@@ -78,7 +90,7 @@ RUN apt-get update \
  # Download and unpack the tar.gz distribution
  ARG GIT_LFS_VERSION=3.7.1
  # hadolint ignore=DL4006
@@ -67,7 +66,7 @@ index 87295fd..06484aa 100644
    && curl -L -s -o git-lfs.tgz "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/git-lfs-linux-${arch}-v${GIT_LFS_VERSION}.tar.gz" \
    && tar xzf git-lfs.tgz \
    && bash git-lfs-*/install.sh \
-@@ -158,11 +171,12 @@ ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
+@@ -158,11 +170,12 @@ ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
  
  # metadata labels
  LABEL \

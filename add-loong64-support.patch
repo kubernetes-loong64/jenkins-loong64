@@ -1,5 +1,5 @@
 diff --git a/debian/Dockerfile b/debian/Dockerfile
-index c538c82..7cd6848 100644
+index 83eec49..7751f33 100644
 --- a/debian/Dockerfile
 +++ b/debian/Dockerfile
 @@ -1,11 +1,13 @@
@@ -59,7 +59,7 @@ index c538c82..7cd6848 100644
      tzdata \
 @@ -78,7 +90,7 @@ RUN apt-get update \
  # Download and unpack the tar.gz distribution
- ARG GIT_LFS_VERSION=3.7.1
+ ARG GIT_LFS_VERSION=3.8.0
  # hadolint ignore=DL4006
 -RUN arch=$(uname -m | sed -e 's/x86_64/amd64/g' -e 's/aarch64/arm64/g') \
 +RUN arch=$(uname -m | sed -e 's/x86_64/amd64/g' -e 's/aarch64/arm64/g' -e 's/loongarch64/loong64/g') \

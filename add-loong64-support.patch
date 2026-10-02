@@ -1,5 +1,5 @@
 diff --git a/debian/Dockerfile b/debian/Dockerfile
-index 83eec49..7751f33 100644
+index 91b073a..9fb36d3 100644
 --- a/debian/Dockerfile
 +++ b/debian/Dockerfile
 @@ -1,11 +1,13 @@
@@ -7,7 +7,7 @@ index 83eec49..7751f33 100644
  ARG TRIXIE_TAG=20251103
  
  ARG DEBIAN_RELEASE_LINE=trixie
- ARG DEBIAN_VERSION=20260824
+ ARG DEBIAN_VERSION=20260918
  ARG DEBIAN_VARIANT="-slim"
 -FROM debian:"${DEBIAN_RELEASE_LINE}-${DEBIAN_VERSION}${DEBIAN_VARIANT}" AS jre-and-war
 +FROM "${DEBIAN_NAME}:${DEBIAN_RELEASE_LINE}${DEBIAN_VARIANT}" AS jre-and-war
